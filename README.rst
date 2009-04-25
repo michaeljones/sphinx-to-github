@@ -16,6 +16,11 @@ starting with an underscore are special and does let their content be accessible
 to the server. This is incompatible with Sphinx which uses underscores at the
 start of folder names for static content.
 
+How?
+----
+
+The script should be run from the top level of the html output, ie. from within
+the folder which contains ``index.html`` and the offending underscore folders.
 
 Requirements
 ------------
