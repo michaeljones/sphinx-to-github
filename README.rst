@@ -2,7 +2,7 @@
 Sphinx to GitHub
 ================
 
-A basic shell script for preparing the html output of the sphinx documentation
+A Python script for preparing the html output of the sphinx documentation
 system for github pages. 
 
 It renames any top level folders which start with an underscore and edits any
@@ -19,24 +19,31 @@ start of folder names for static content.
 How?
 ----
 
-The script should be run from the top level of the html output, ie. from within
-the folder which contains ``index.html`` and the offending underscore folders.
+Run the script with the path to the ``html`` output directory as the first
+argument.
 
 Requirements
 ------------
 
-To uses:
-
-* bash
-* sed
-
-Might make sense to have a pure python script but ``sed`` makes it so easy.
+The script uses ``/usr/bin/env`` and ``python``. 
 
 Note
 ----
 
-This has been written and tested for a very basic project. If you find
-complications within more involved setups please let me know and/or patch up the
-code a little.
+The first incarnation of this script was written in bash using ``find`` and
+``sed``. It was delightfully old school but not very portable and not very fast.
+It is available as ``sphinx-to-github.legacy`` because the author isn't ready to
+let go yet.
+
+Credits
+-------
+
+Thank you to:
+
+* `mikejs <http://github.com/mikejs>`
+* `certik <http://github.com/certik>`
+
+For their contributions, to Georg Brandl for `Sphinx <http://sphinx.pocoo.org/>`
+and the github crew for the pages functionality.
 
 

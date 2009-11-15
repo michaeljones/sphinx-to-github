@@ -1,23 +1,55 @@
-#!/bin/bash
-
-sed=`which gsed || which sed`
-
-for underscore_folder in  _*
-do 
-	echo "Processing matches for: " $underscore_folder
-
-	folder_without_underscore=`echo -n $underscore_folder | $sed 's/^.//'`
-
-	for underscore_file in $( find $underscore_folder -type f )
-	do
-		file_without_underscore=`echo -n $underscore_file | $sed 's/^.//'`
-
-		for file in $( find . -type f -name "*.html" )
-		do
-			$sed -i "s/${underscore_file//\//\/}/${file_without_underscore//\//\/}/g" $file
-		done
-	done
-
-	mv $underscore_folder $folder_without_underscore
-done
+#! /usr/bin/env python
+ 
+import os
+import sys
+import re
+ 
+dir = sys.argv[1]
+ 
+def convert_file(file, convert_dict):
+    print "Converting: %s" % file
+    text = open(file).read()
+    for old_link in convert_dict:
+        new_link = convert_dict[old_link]
+        text = text.replace(old_link, new_link)
+    open(file, "w").write(text)
+ 
+def remove_underscores(path):
+    i = path.find("_")
+    if i != -1:
+        path = path[:i] + path[i+1:]
+        return remove_underscores(path)
+    else:
+        return path
+ 
+def strip_beginning_dotslash(path):
+    if "./" == path[:2]:
+        path = path[2:]
+    return path
+ 
+# build up the global dictionary with files we need to convert:
+d = {}
+for old_root, dirs, files in os.walk(dir):
+    if "_" in old_root:
+        new_root = remove_underscores(old_root)
+        assert new_root != old_root
+        os.mkdir(new_root)
+        for file in files:
+            old_path = os.path.join(old_root, file)
+            new_path = os.path.join(new_root, file)
+            os.rename(old_path, new_path)
+            new_path = strip_beginning_dotslash(new_path)
+            old_path = strip_beginning_dotslash(old_path)
+            d[old_path] = new_path
+ 
+# delete the old "_" directories
+for old_root, dirs, files in os.walk(dir, topdown=False):
+    if "_" in old_root:
+        os.rmdir(old_root)
+ 
+# convert all html files:
+for root, dirs, files in os.walk(dir):
+    for file in files:
+        if file.endswith(".html"):
+            convert_file(os.path.join(root, file), d)
 
