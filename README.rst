@@ -1,4 +1,3 @@
-
 Sphinx to GitHub
 ================
 
@@ -40,10 +39,10 @@ Credits
 
 Thank you to:
 
-* `mikejs <http://github.com/mikejs>`
-* `certik <http://github.com/certik>`
+* `mikejs <http://github.com/mikejs>`_
+* `certik <http://github.com/certik>`_
 
-For their contributions, to Georg Brandl for `Sphinx <http://sphinx.pocoo.org/>`
+For their contributions, to Georg Brandl for `Sphinx <http://sphinx.pocoo.org/>`_
 and the github crew for the pages functionality.
 
 
