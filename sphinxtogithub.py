@@ -23,28 +23,31 @@ class Replacer(object):
 class FileHandler(object):
     "Applies a series of replacements the contents of a file inplace"
 
-    def __init__(self, name, replacers):
+    def __init__(self, name, replacers, opener):
 
         self.name = name
         self.replacers = replacers
+        self.opener = opener
 
     def process(self):
 
-        text = open(self.name).read()
+        text = self.opener(self.name).read()
 
         for replacer in self.replacers:
             text = replacer.process( text )
 
-        open(self.name, "w").write(text)
+        self.opener(self.name, "w").write(text)
+
 
 class DirectoryHandler(object):
     "Encapsulates renaming a directory by removing its first character"
 
-    def __init__(self, name, root):
+    def __init__(self, name, root, renamer):
 
         self.name = name
         self.new_name = name[1:]
         self.root = root + os.sep
+        self.renamer = renamer
 
     def path(self):
         
@@ -64,13 +67,14 @@ class DirectoryHandler(object):
 
         from_ = os.path.join(self.root, self.name)
         to = os.path.join(self.root, self.new_name)
-        os.rename(from_, to)
+        self.renamer(from_, to)
+
 
 class VerboseDirectoryHandler(DirectoryHandler):
 
-    def __init__(self, name, root, stream):
+    def __init__(self, name, root, renamer, stream):
 
-        DirectoryHandler.__init__(self, name, root)
+        DirectoryHandler.__init__(self, name, root, renamer)
 
         self.stream = stream
 
@@ -118,12 +122,12 @@ class LayoutFactory(object):
         directories = [d for d in contents if self.is_underscore_dir(path, d)]
         if self.verbose:
             underscore_directories = [
-                    VerboseDirectoryHandler(d, path, self.output_stream)
+                    VerboseDirectoryHandler(d, path, shutil.move, self.output_stream)
                         for d in directories
                     ]
         else:
             underscore_directories = [
-                    DirectoryHandler(d, path) for d in directories
+                    DirectoryHandler(d, path, shutil.move) for d in directories
                     ]
 
         if not underscore_directories:
@@ -147,7 +151,7 @@ class LayoutFactory(object):
             for f in files:
                 if f.endswith(".html"):
                     filelist.append(
-                            FileHandler(os.path.join(root, f), replacers)
+                            FileHandler(os.path.join(root, f), replacers, open)
                             )
 
         return Layout(underscore_directories, filelist)
