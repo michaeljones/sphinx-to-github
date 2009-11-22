@@ -37,7 +37,7 @@ extensions list in the ``conf.py`` file in your Sphinx project::
 
 Additionally there are two config variables you can use to control the
 extension. The first enables/disables the extension and the second enables
-verbose output. They are ``True`` by default.
+verbose output. They are ``True`` by default::
 
    sphinx_to_github = True
    sphinx_to_github_verbose = True
