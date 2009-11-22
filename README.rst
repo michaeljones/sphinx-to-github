@@ -1,7 +1,7 @@
 Sphinx to GitHub
 ================
 
-A Python script for preparing the html output of the sphinx documentation
+A Python script for preparing the html output of the Sphinx documentation
 system for github pages. 
 
 It renames any top level folders which start with an underscore and edits any
@@ -18,8 +18,29 @@ start of folder names for static content.
 How?
 ----
 
+The ``sphinxtogithub.py`` script can be run on the command line or used as a
+Sphinx extension.
+
+Command Line
+~~~~~~~~~~~~
+
 Run the script with the path to the ``html`` output directory as the first
-argument.
+argument. There is a ``--verbose`` flag for basic output.
+
+Extension
+~~~~~~~~~
+
+Place the script on the ``PYTHONPATH`` and add ``sphinxtogithub`` to the
+extensions list in the ``conf.py`` file in your Sphinx project::
+
+   extensions = [ "sphinxtogithub" ]
+
+Additionally there are two config variables you can use to control the
+extension. The first enables/disables the extension and the second enables
+verbose output. They are ``True`` by default.
+
+   sphinx_to_github = True
+   sphinx_to_github_verbose = True
 
 Requirements
 ------------
