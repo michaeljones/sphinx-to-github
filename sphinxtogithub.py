@@ -3,10 +3,12 @@
 from optparse import OptionParser
 import os
 import sys
+import shutil
 
 
 class NoDirectoriesError(Exception):
     "Error thrown when no directories starting with an underscore are found"
+
 
 class Replacer(object):
     "Encapsulates a simple text replace"
@@ -37,6 +39,45 @@ class FileHandler(object):
             text = replacer.process( text )
 
         self.opener(self.name, "w").write(text)
+
+class Remover(object):
+
+    def __init__(self, exists, remove):
+        self.exists = exists
+        self.remove = remove
+
+    def __call__(self, name):
+
+        if self.exists(name):
+            self.remove(name)
+
+class ForceRename(object):
+
+    def __init__(self, renamer, remove):
+
+        self.renamer = renamer
+        self.remove = remove
+
+    def __call__(self, from_, to):
+
+        self.remove(to)
+        self.renamer(from_, to)
+
+class VerboseRename(object):
+
+    def __init__(self, renamer, stream):
+
+        self.renamer = renamer
+        self.stream = stream
+
+    def __call__(self, from_, to):
+
+        self.stream.write(
+                "Renaming directory '%s' -> '%s'\n"
+                    % (os.path.basename(from_), os.path.basename(to))
+                )
+
+        self.renamer(from_, to)
 
 
 class DirectoryHandler(object):
@@ -70,22 +111,6 @@ class DirectoryHandler(object):
         self.renamer(from_, to)
 
 
-class VerboseDirectoryHandler(DirectoryHandler):
-
-    def __init__(self, name, root, renamer, stream):
-
-        DirectoryHandler.__init__(self, name, root, renamer)
-
-        self.stream = stream
-
-    def process(self):
-
-        self.stream.write(
-                "Renaming directory '%s' -> '%s'\n" % (self.name, self.new_name)
-                )
-
-        DirectoryHandler.process(self)
-
 class Layout(object):
     """
     Applies a set of operations which result in the layout
@@ -109,26 +134,31 @@ class Layout(object):
 class LayoutFactory(object):
     "Creates a layout object"
 
-    def __init__(self, verbose, stream):
+    def __init__(self, verbose, stream, force):
 
         self.verbose = verbose
         self.output_stream = stream
+        self.force = force
 
     def create_layout(self, path):
 
         contents = os.listdir(path)
 
+        renamer = shutil.move
+
+        if self.force:
+            remove = Remover(os.path.exists, shutil.rmtree)
+            renamer = ForceRename(renamer, remove)
+
+        if self.verbose:
+            renamer = VerboseRename(renamer, self.output_stream)
+
         # Build list of directories to process
         directories = [d for d in contents if self.is_underscore_dir(path, d)]
-        if self.verbose:
-            underscore_directories = [
-                    VerboseDirectoryHandler(d, path, shutil.move, self.output_stream)
-                        for d in directories
-                    ]
-        else:
-            underscore_directories = [
-                    DirectoryHandler(d, path, shutil.move) for d in directories
-                    ]
+        underscore_directories = [
+                DirectoryHandler(d, path, renamer)
+                    for d in directories
+                ]
 
         if not underscore_directories:
             raise NoDirectoriesError()
@@ -181,7 +211,7 @@ def main(args):
                 )
         return
 
-    layout_factory = LayoutFactory(opts.verbose, sys.stdout)
+    layout_factory = LayoutFactory(opts.verbose, sys.stdout, force=False)
 
     try:
         layout = layout_factory.create_layout(path)
