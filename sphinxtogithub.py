@@ -197,12 +197,17 @@ class LayoutFactory(object):
 def sphinx_extension(app, exception):
     "Wrapped up as a Sphinx Extension"
 
-    if exception:
-        print "Sphinx-to-github: Exception raised in main build, doing nothing."
+    if app.builder.name != "html":
         return
 
     if not app.config.sphinx_to_github:
-        print "Sphinx-to-github: Disabled, doing nothing."
+        if app.config.sphinx_to_github_verbose:
+            print "Sphinx-to-github: Disabled, doing nothing."
+        return
+
+    if exception:
+        if app.config.sphinx_to_github_verbose:
+            print "Sphinx-to-github: Exception raised in main build, doing nothing."
         return
 
     layout_factory = LayoutFactory(
