@@ -148,7 +148,7 @@ class LayoutFactory(object):
 
         if self.force:
             remove = Remover(os.path.exists, shutil.rmtree)
-            renamer = ForceRename(renamer, remove)
+            renamer = ForceRename(renamer, remove) 
 
         if self.verbose:
             renamer = VerboseRename(renamer, self.output_stream)
@@ -192,6 +192,36 @@ class LayoutFactory(object):
         return (os.path.isdir(os.path.join(path, directory))
             and directory.startswith("_"))
 
+
+
+def sphinx_extension(app, exception):
+    "Wrapped up as a Sphinx Extension"
+
+    if exception:
+        print "Sphinx-to-github: Exception raised in main build, doing nothing."
+        return
+
+    if not app.config.sphinx_to_github:
+        print "Sphinx-to-github: Disabled, doing nothing."
+        return
+
+    layout_factory = LayoutFactory(
+            app.config.sphinx_to_github_verbose,
+            sys.stdout,
+            force=True
+            )
+
+    layout = layout_factory.create_layout(app.outdir)
+    layout.process()
+
+
+def setup(app):
+    "Setup function for Sphinx Extension"
+
+    app.add_config_value("sphinx_to_github", True, '')
+    app.add_config_value("sphinx_to_github_verbose", True, '')
+
+    app.connect("build-finished", sphinx_extension)
 
 
 def main(args):
