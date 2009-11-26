@@ -47,13 +47,13 @@ Requirements
 
 The script uses ``/usr/bin/env`` and ``python``. 
 
-Note
-----
+Alternatives
+------------
 
-The first incarnation of this script was written in bash using ``find`` and
-``sed``. It was delightfully old school but not very portable and not very fast.
-It is available as ``sphinx-to-github.legacy`` because the author isn't ready to
-let go yet.
+`dinoboff's <http://github.com/dinoboff>`_ project `github-tools
+<http://github.com/dinoboff/github-tools>`_ provides similar functionality
+combined with a much more comprehensive set of tools for helping you to manage
+Python based projects on github.
 
 Credits
 -------
