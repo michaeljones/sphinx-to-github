@@ -183,6 +183,12 @@ class LayoutFactory(object):
                     filelist.append(
                             FileHandler(os.path.join(root, f), replacers, open)
                             )
+                if f.endswith(".js"):
+                    filelist.append(
+                            FileHandler(os.path.join(root, f),
+                                        [Replacer("'_sources/'", "'sources/'")],
+                                        open)
+                            )
 
         return Layout(underscore_directories, filelist)
 
