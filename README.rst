@@ -62,6 +62,7 @@ Thank you to:
 
 * `mikejs <http://github.com/mikejs>`_
 * `certik <http://github.com/certik>`_
+* `davvid <http://github.com/davvid>`_
 
 For their contributions, to Georg Brandl for `Sphinx <http://sphinx.pocoo.org/>`_
 and the github crew for the pages functionality.
