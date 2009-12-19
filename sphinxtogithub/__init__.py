@@ -9,3 +9,17 @@ __author__ = "Michael Jones"
 __contact__ = "http://github.com/michaeljones"
 __homepage__ = "http://github.com/michaeljones/sphinx-to-github"
 __docformat__ = "restructuredtext"
+
+from sphinxtogithub import (
+    setup,
+    sphinx_extension,
+    LayoutFactory,
+    Layout,
+    DirectoryHandler,
+    VerboseRename,
+    ForceRename,
+    Remover,
+    FileHandler,
+    Replacer,
+    NoDirectoriesError,
+)
