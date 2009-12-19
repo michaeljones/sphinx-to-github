@@ -48,7 +48,7 @@ setup(
     url=sphinxtogithub.__homepage__,
     platforms=["any"],
     license="BSD",
-    packages=find_packages('sphinxtogithub'),
+    packages=find_packages(),
     scripts=["bin/sphinxtogithub"],
     zip_safe=False,
     install_requires=[],
