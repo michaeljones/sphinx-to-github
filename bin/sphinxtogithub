@@ -3,4 +3,4 @@ import sys
 from sphinxtogithub.sphinxtogithub import main
 
 if __name__ == "__main__":
-    mains(sys.argv[1:])
+    main(sys.argv[1:])
