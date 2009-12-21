@@ -2,7 +2,7 @@ Sphinx to GitHub
 ================
 
 A Python script for preparing the html output of the Sphinx documentation
-system for github pages. 
+system for github pages.
 
 It renames any top level folders which start with an underscore and edits any
 references to them within the html files.
@@ -45,7 +45,15 @@ verbose output. They are ``True`` by default::
 Requirements
 ------------
 
-The script uses ``/usr/bin/env`` and ``python``. 
+The script uses ``/usr/bin/env`` and ``python``.
+
+Running Tests
+-------------
+
+Unit tests can be run using the setuptools ``test`` target. eg::
+
+   $ python setup.py test
+
 
 Alternatives
 ------------
