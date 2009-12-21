@@ -1,5 +1,3 @@
-<!-- Using markdown because github's rst rendering is so poor -->
-
 # Sphinx to GitHub
 
 A Python script for preparing the html output of the Sphinx documentation
@@ -23,16 +21,16 @@ Sphinx extension.
 ### Extension
 
 Place the script on the ``PYTHONPATH`` and add ``sphinxtogithub`` to the
-extensions list in the ``conf.py`` file in your Sphinx project::
+extensions list in the ``conf.py`` file in your Sphinx project:
 
-   extensions = [ "sphinxtogithub" ]
+    extensions = [ "sphinxtogithub" ]
 
 Additionally there are two config variables you can use to control the
 extension. The first enables/disables the extension and the second enables
-verbose output. They are ``True`` by default::
+verbose output. They are ``True`` by default:
 
-   sphinx_to_github = True
-   sphinx_to_github_verbose = True
+    sphinx_to_github = True
+    sphinx_to_github_verbose = True
 
 ### Command Line
 
@@ -43,11 +41,11 @@ argument. There is a ``--verbose`` flag for basic output.
 
 ### Install from GitHub
 
-It should be possible to install this tool directly from github using pip::
+It should be possible to install this tool directly from github using pip:
 
-   pip install -e git+git://github.com/michaeljones/sphinx-to-github.git#egg=sphinx-to-github
+    pip install -e git+git://github.com/michaeljones/sphinx-to-github.git#egg=sphinx-to-github
 
-Thanks to `winhamwr's <http://github.com/winhamwr>`_ work.
+Thanks to [winhamwr's](http://github.com/winhamwr) work.
 
 ### Requirements
 
@@ -55,28 +53,28 @@ The script uses ``/usr/bin/env`` and ``python``.
 
 ### Running Tests
 
-Unit tests can be run using the setuptools ``test`` target. eg::
+Unit tests can be run using the setuptools ``test`` target. eg:
 
-   $ python setup.py test
+    $ python setup.py test
 
 ### Alternatives
 
-`dinoboff's <http://github.com/dinoboff>`_ project `github-tools
-<http://github.com/dinoboff/github-tools>`_ provides similar functionality
-combined with a much more comprehensive set of tools for helping you to manage
-Python based projects on github.
+[dinoboff's](http://github.com/dinoboff) project
+[github-tools](http://github.com/dinoboff/github-tools) provides similar
+functionality combined with a much more comprehensive set of tools for helping
+you to manage Python based projects on github.
 
 ## Credits
 
 Thank you to:
 
-* `mikejs <http://github.com/mikejs>`_
-* `certik <http://github.com/certik>`_
-* `davvid <http://github.com/davvid>`_
-* `winhamwr <http://github.com/winhamwr>`_
+* [mikejs](http://github.com/mikejs)
+* [certik](http://github.com/certik)
+* [davvid](http://github.com/davvid)
+* [winhamwr](http://github.com/winhamwr)
 
 For their contributions, which are beginning to outweigh mine, to Georg Brandl
-for `Sphinx <http://sphinx.pocoo.org/>`_ and the github crew for the pages
+for [Sphinx](http://sphinx.pocoo.org/) and the github crew for the pages
 functionality.
 
 
