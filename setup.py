@@ -11,6 +11,12 @@ except ImportError:
     from setuptools import setup, find_packages, Command
 
 import sphinxtogithub
+from sphinxtogithub.tests import (
+    filehandler,
+    directoryhandler,
+    replacer,
+    renamer
+)
 
 class RunTests(Command):
     description = "Run the sphinxtogithub test suite."
@@ -25,10 +31,10 @@ class RunTests(Command):
 
     def run(self):
         suites = [
-            sphinxtogithub.test.filehandler.testSuite(),
-            sphinxtogithub.test.directoryhandler.testSuite(),
-            sphinxtogithub.test.replacer.testSuite(),
-            sphinxtogithub.test.renamer.testSuite(),
+            filehandler.testSuite(),
+            directoryhandler.testSuite(),
+            replacer.testSuite(),
+            renamer.testSuite(),
         ]
 
         suite = unittest.TestSuite(suites)
