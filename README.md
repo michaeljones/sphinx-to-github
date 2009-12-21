@@ -1,31 +1,26 @@
-Sphinx to GitHub
-================
+<!-- Using markdown because github's rst rendering is so poor -->
 
-About
------
- 
+# Sphinx to GitHub
+
 A Python script for preparing the html output of the Sphinx documentation
 system for github pages.
 
 It renames any top level folders which start with an underscore and edits any
 references to them within the html files.
 
-Why?
-~~~~
+### Why?
 
 GitHub processes the incoming html with Jekyll which believes top level folders
 starting with an underscore are special and does not let their content be accessible
 to the server. This is incompatible with Sphinx which uses underscores at the
 start of folder names for static content.
 
-Usage
------
+## Usage
 
 The ``sphinxtogithub.py`` script can be run on the command line or used as a
 Sphinx extension.
 
-Extension
-~~~~~~~~~
+### Extension
 
 Place the script on the ``PYTHONPATH`` and add ``sphinxtogithub`` to the
 extensions list in the ``conf.py`` file in your Sphinx project::
@@ -39,17 +34,14 @@ verbose output. They are ``True`` by default::
    sphinx_to_github = True
    sphinx_to_github_verbose = True
 
-Command Line
-~~~~~~~~~~~~
+### Command Line
 
 Run the script with the path to the ``html`` output directory as the first
 argument. There is a ``--verbose`` flag for basic output.
 
-Further Information
--------------------
+## Further Information
 
-Install from GitHub
-~~~~~~~~~~~~~~~~~~~
+### Install from GitHub
 
 It should be possible to install this tool directly from github using pip::
 
@@ -57,28 +49,24 @@ It should be possible to install this tool directly from github using pip::
 
 Thanks to `winhamwr's <http://github.com/winhamwr>`_ work.
 
-Requirements
-~~~~~~~~~~~~
+### Requirements
 
 The script uses ``/usr/bin/env`` and ``python``.
 
-Running Tests
-~~~~~~~~~~~~~
+### Running Tests
 
 Unit tests can be run using the setuptools ``test`` target. eg::
 
    $ python setup.py test
 
-Alternatives
-~~~~~~~~~~~~
+### Alternatives
 
 `dinoboff's <http://github.com/dinoboff>`_ project `github-tools
 <http://github.com/dinoboff/github-tools>`_ provides similar functionality
 combined with a much more comprehensive set of tools for helping you to manage
 Python based projects on github.
 
-Credits
--------
+## Credits
 
 Thank you to:
 
