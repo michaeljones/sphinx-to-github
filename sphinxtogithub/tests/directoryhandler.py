@@ -5,7 +5,7 @@ import os
 import sphinxtogithub
 
 
-class TestRenamer(object):
+class MockRenamer(object):
 
     def __call__(self, from_, to):
 
@@ -19,7 +19,7 @@ class TestDirectoryHandler(unittest.TestCase):
         self.directory = "_static"
         self.new_directory = "static"
         self.root = os.path.join("build", "html")
-        renamer = TestRenamer()
+        renamer = MockRenamer()
         self.dir_handler = sphinxtogithub.DirectoryHandler(self.directory, self.root, renamer)
 
     def tearDown(self):

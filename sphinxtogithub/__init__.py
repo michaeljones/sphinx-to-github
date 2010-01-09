@@ -21,5 +21,10 @@ from sphinxtogithub import (
     Remover,
     FileHandler,
     Replacer,
+    DirHelper,
+    FileSystemHelper,
+    OperationsFactory,
+    HandlerFactory,
     NoDirectoriesError,
 )
+

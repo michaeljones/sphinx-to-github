@@ -15,7 +15,11 @@ from sphinxtogithub.tests import (
     filehandler,
     directoryhandler,
     replacer,
-    renamer
+    renamer,
+    remover, 
+    layout,
+    layoutfactory,
+    setup as setuptest,
 )
 
 class RunTests(Command):
@@ -35,6 +39,10 @@ class RunTests(Command):
             directoryhandler.testSuite(),
             replacer.testSuite(),
             renamer.testSuite(),
+            remover.testSuite(),
+            layout.testSuite(),
+            layoutfactory.testSuite(),
+            setuptest.testSuite(),
         ]
 
         suite = unittest.TestSuite(suites)

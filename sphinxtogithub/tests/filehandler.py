@@ -3,7 +3,7 @@ import unittest
 
 import sphinxtogithub
 
-class TestFileObject(object):
+class MockFileObject(object):
 
     before = """
     <title>Breathe's documentation &mdash; BreatheExample v0.0.1 documentation</title>
@@ -25,11 +25,11 @@ class TestFileObject(object):
 
         self.written = text
 
-class TestOpener(object):
+class MockOpener(object):
 
     def __init__(self):
 
-        self.file_object = TestFileObject()
+        self.file_object = MockFileObject()
 
     def __call__(self, name, readmode="r"):
         
@@ -45,12 +45,12 @@ class TestFileHandler(unittest.TestCase):
 
         filepath = "filepath"
         
-        opener = TestOpener()
+        opener = MockOpener()
         file_handler = sphinxtogithub.FileHandler(filepath, [], opener)
 
         file_handler.process()
 
-        self.assertEqual(opener.file_object.written, TestFileObject.before)
+        self.assertEqual(opener.file_object.written, MockFileObject.before)
         self.assertEqual(opener.name, filepath)
 
     def testProcessWithReplacers(self):
@@ -61,12 +61,12 @@ class TestFileHandler(unittest.TestCase):
         replacers.append(sphinxtogithub.Replacer("_static/default.css", "static/default.css"))
         replacers.append(sphinxtogithub.Replacer("_static/pygments.css", "static/pygments.css"))
 
-        opener = TestOpener()
+        opener = MockOpener()
         file_handler = sphinxtogithub.FileHandler(filepath, replacers, opener)
 
         file_handler.process()
 
-        self.assertEqual(opener.file_object.written, TestFileObject.after)
+        self.assertEqual(opener.file_object.written, MockFileObject.after)
 
 
 

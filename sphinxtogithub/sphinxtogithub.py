@@ -9,6 +9,23 @@ import shutil
 class NoDirectoriesError(Exception):
     "Error thrown when no directories starting with an underscore are found"
 
+class DirHelper(object):
+
+    def __init__(self, is_dir, list_dir, walk, rmtree):
+
+        self.is_dir = is_dir
+        self.list_dir = list_dir
+        self.walk = walk
+        self.rmtree = rmtree
+
+class FileSystemHelper(object):
+
+    def __init__(self, open_, path_join, move, exists):
+
+        self.open_ = open_
+        self.path_join = path_join
+        self.move = move
+        self.exists = exists
 
 class Replacer(object):
     "Encapsulates a simple text replace"
@@ -111,6 +128,32 @@ class DirectoryHandler(object):
         self.renamer(from_, to)
 
 
+class HandlerFactory(object):
+
+    def create_file_handler(self, name, replacers, opener):
+
+        return FileHandler(name, replacers, opener)
+
+    def create_dir_handler(self, name, root, renamer):
+
+        return DirectoryHandler(name, root, renamer)
+
+
+class OperationsFactory(object):
+
+    def create_force_rename(self, renamer, remover):
+
+        return ForceRename(renamer, remover)
+
+    def create_verbose_rename(self, renamer, stream):
+
+        return VerboseRename(renamer, stream)
+
+    def create_replacer(self, from_, to):
+
+        return Replacer(from_, to)
+
+
 class Layout(object):
     """
     Applies a set of operations which result in the layout
@@ -134,7 +177,13 @@ class Layout(object):
 class LayoutFactory(object):
     "Creates a layout object"
 
-    def __init__(self, verbose, stream, force):
+    def __init__(self, operations_factory, handler_factory, file_helper, dir_helper, verbose, stream, force):
+
+        self.operations_factory = operations_factory
+        self.handler_factory = handler_factory
+
+        self.file_helper = file_helper
+        self.dir_helper = dir_helper
 
         self.verbose = verbose
         self.output_stream = stream
@@ -142,21 +191,21 @@ class LayoutFactory(object):
 
     def create_layout(self, path):
 
-        contents = os.listdir(path)
+        contents = self.dir_helper.list_dir(path)
 
-        renamer = shutil.move
+        renamer = self.file_helper.move
 
         if self.force:
-            remove = Remover(os.path.exists, shutil.rmtree)
-            renamer = ForceRename(renamer, remove) 
+            remove = self.operations_factory.create_remover(self.file_helper.exists, self.file_helper.rmtree)
+            renamer = self.operations_factory.create_force_rename(renamer, remove) 
 
         if self.verbose:
-            renamer = VerboseRename(renamer, self.output_stream)
+            renamer = self.operations_factory.create_force_rename(renamer, self.output_stream) 
 
         # Build list of directories to process
         directories = [d for d in contents if self.is_underscore_dir(path, d)]
         underscore_directories = [
-                DirectoryHandler(d, path, renamer)
+                self.handler_factory.create_dir_handler(d, path, renamer)
                     for d in directories
                 ]
 
@@ -166,10 +215,10 @@ class LayoutFactory(object):
         # Build list of files that are in those directories
         replacers = []
         for handler in underscore_directories:
-            for directory, dirs, files in os.walk(handler.path()):
+            for directory, dirs, files in self.dir_helper.walk(handler.path()):
                 for f in files:
                     replacers.append(
-                            Replacer(
+                            self.operations_factory.create_replacer(
                                 handler.relative_path(directory, f),
                                 handler.new_relative_path(directory, f)
                                 )
@@ -177,31 +226,42 @@ class LayoutFactory(object):
 
         # Build list of handlers to process all files
         filelist = []
-        for root, dirs, files in os.walk(path):
+        for root, dirs, files in self.dir_helper.walk(path):
             for f in files:
                 if f.endswith(".html"):
                     filelist.append(
-                            FileHandler(os.path.join(root, f), replacers, open)
+                            self.handler_factory.create_file_handler(
+                                self.file_helper.path_join(root, f),
+                                replacers,
+                                self.file_helper.open_)
                             )
                 if f.endswith(".js"):
                     filelist.append(
-                            FileHandler(os.path.join(root, f),
-                                        [Replacer("'_sources/'", "'sources/'")],
-                                        open)
+                            self.handler_factory.create_file_handler(
+                                self.file_helper.path_join(root, f),
+                                [self.operations_factory.create_replacer("'_sources/'", "'sources/'")],
+                                self.file_helper.open_
+                                )
                             )
 
         return Layout(underscore_directories, filelist)
 
-    @staticmethod
-    def is_underscore_dir(path, directory):
+    def is_underscore_dir(self, path, directory):
 
-        return (os.path.isdir(os.path.join(path, directory))
+        return (self.dir_helper.is_dir(self.file_helper.path_join(path, directory))
             and directory.startswith("_"))
 
 
 
 def sphinx_extension(app, exception):
     "Wrapped up as a Sphinx Extension"
+
+    # This code is sadly untestable in its current state
+    # It would be helped if there was some function for loading extension
+    # specific data on to the app object and the app object providing 
+    # a file-like object for writing to standard out.
+    # The former is doable, but not officially supported (as far as I know)
+    # so I wouldn't know where to stash the data. 
 
     if app.builder.name != "html":
         return
@@ -252,7 +312,32 @@ def main(args):
                 )
         return
 
-    layout_factory = LayoutFactory(opts.verbose, sys.stdout, force=False)
+    dir_helper = DirHelper(
+            os.isdir,
+            os.listdir,
+            os.walk,
+            shutil.rmtree
+            )
+
+    file_helper = FileSystemHelper(
+            open,
+            os.path.join,
+            shutil.move,
+            os.path.exists
+            )
+    
+    operations_factory = OperationsFactory()
+    handler_factory = HandlerFactory()
+
+    layout_factory = LayoutFactory(
+            operations_factory,
+            handler_factory,
+            file_helper,
+            dir_helper,
+            opts.verbose,
+            sys.stdout,
+            force=False
+            )
 
     try:
         layout = layout_factory.create_layout(path)
