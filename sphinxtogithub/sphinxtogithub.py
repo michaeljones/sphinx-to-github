@@ -153,6 +153,10 @@ class OperationsFactory(object):
 
         return Replacer(from_, to)
 
+    def create_remover(self, exists, remove):
+
+        return Remover(exists, remove)
+
 
 class Layout(object):
     """
@@ -196,11 +200,11 @@ class LayoutFactory(object):
         renamer = self.file_helper.move
 
         if self.force:
-            remove = self.operations_factory.create_remover(self.file_helper.exists, self.file_helper.rmtree)
+            remove = self.operations_factory.create_remover(self.file_helper.exists, self.dir_helper.rmtree)
             renamer = self.operations_factory.create_force_rename(renamer, remove) 
 
         if self.verbose:
-            renamer = self.operations_factory.create_force_rename(renamer, self.output_stream) 
+            renamer = self.operations_factory.create_verbose_rename(renamer, self.output_stream) 
 
         # Build list of directories to process
         directories = [d for d in contents if self.is_underscore_dir(path, d)]
@@ -276,7 +280,28 @@ def sphinx_extension(app, exception):
             print "Sphinx-to-github: Exception raised in main build, doing nothing."
         return
 
+    dir_helper = DirHelper(
+            os.path.isdir,
+            os.listdir,
+            os.walk,
+            shutil.rmtree
+            )
+
+    file_helper = FileSystemHelper(
+            open,
+            os.path.join,
+            shutil.move,
+            os.path.exists
+            )
+    
+    operations_factory = OperationsFactory()
+    handler_factory = HandlerFactory()
+
     layout_factory = LayoutFactory(
+            operations_factory,
+            handler_factory,
+            file_helper,
+            dir_helper,
             app.config.sphinx_to_github_verbose,
             sys.stdout,
             force=True
@@ -313,7 +338,7 @@ def main(args):
         return
 
     dir_helper = DirHelper(
-            os.isdir,
+            os.path.isdir,
             os.listdir,
             os.walk,
             shutil.rmtree
