@@ -267,7 +267,7 @@ def sphinx_extension(app, exception):
     # The former is doable, but not officially supported (as far as I know)
     # so I wouldn't know where to stash the data. 
 
-    if app.builder.name != "html":
+    if not app.builder.name in ("html", "dirhtml"):
         return
 
     if not app.config.sphinx_to_github:
