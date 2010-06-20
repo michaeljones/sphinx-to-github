@@ -260,13 +260,6 @@ class LayoutFactory(object):
 def sphinx_extension(app, exception):
     "Wrapped up as a Sphinx Extension"
 
-    # This code is sadly untestable in its current state
-    # It would be helped if there was some function for loading extension
-    # specific data on to the app object and the app object providing 
-    # a file-like object for writing to standard out.
-    # The former is doable, but not officially supported (as far as I know)
-    # so I wouldn't know where to stash the data. 
-
     if not app.builder.name in ("html", "dirhtml"):
         return
 
