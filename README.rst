@@ -84,6 +84,7 @@ Thank you to:
 * `davvid <http://github.com/davvid>`_
 * `winhamwr <http://github.com/winhamwr>`_
 * `johnpaulett <http://github.com/johnpaulett>`_
+* `boothead <http://github.com/boothead>`_
 
 For their contributions, which are beginning to outweigh mine, to Georg Brandl
 for `Sphinx <http://sphinx.pocoo.org/>`_ and the github crew for the pages
