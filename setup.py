@@ -3,7 +3,6 @@
 
 import codecs
 import os
-import sys
 import unittest
 
 try:
@@ -55,14 +54,21 @@ class RunTests(Command):
         runner.run(suite)
 
 
-def publish():
-	"""Publish to PyPi"""
-	os.system("python setup.py sdist upload")
+class Publish(Command):
+    description = "Publish package to PyPi"
 
-if sys.argv[-1] == "publish":
-	publish()
-	sys.exit()
+    user_options = []
 
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        """Publish to PyPi"""
+
+        os.system("python setup.py sdist upload")
 
 
 long_description = codecs.open("README.rst", "r", "utf-8").read()
@@ -80,7 +86,7 @@ setup(
     scripts=["bin/sphinxtogithub"],
     zip_safe=False,
     install_requires=[],
-    cmdclass = {"test": RunTests},
+    cmdclass = {"test": RunTests, "publish" : Publish},
     classifiers=[
         "Development Status :: 4 - Beta",
         "Operating System :: OS Independent",
