@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 import codecs
+import os
+import sys
 import unittest
 
 try:
@@ -16,7 +19,7 @@ from sphinxtogithub.tests import (
     directoryhandler,
     replacer,
     renamer,
-    remover, 
+    remover,
     layout,
     layoutfactory,
     setup as setuptest,
@@ -50,6 +53,15 @@ class RunTests(Command):
         runner = unittest.TextTestRunner()
 
         runner.run(suite)
+
+
+def publish():
+	"""Publish to PyPi"""
+	os.system("python setup.py sdist upload")
+
+if sys.argv[-1] == "publish":
+	publish()
+	sys.exit()
 
 
 
