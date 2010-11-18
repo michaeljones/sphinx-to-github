@@ -6,9 +6,6 @@ import sys
 import shutil
 
 
-class NoDirectoriesError(Exception):
-    "Error thrown when no directories starting with an underscore are found"
-
 class DirHelper(object):
 
     def __init__(self, is_dir, list_dir, walk, rmtree):
@@ -178,6 +175,13 @@ class Layout(object):
             handler.process()
 
 
+class NullLayout(object):
+    """
+    Layout class that does nothing when asked to process
+    """
+    def process(self):
+        pass
+
 class LayoutFactory(object):
     "Creates a layout object"
 
@@ -214,7 +218,12 @@ class LayoutFactory(object):
                 ]
 
         if not underscore_directories:
-            raise NoDirectoriesError()
+            if self.verbose:
+                self.output_stream.write(
+                        "No top level directories starting with an underscore "
+                        "were found in '%s'\n" % path
+                        )
+            return NullLayout()
 
         # Build list of files that are in those directories
         replacers = []
@@ -357,15 +366,7 @@ def main(args):
             force=False
             )
 
-    try:
-        layout = layout_factory.create_layout(path)
-    except NoDirectoriesError:
-        sys.stderr.write(
-                "Error - No top level directories starting with an underscore "
-                "were found in '%s'\n" % path
-                )
-        return
-
+    layout = layout_factory.create_layout(path)
     layout.process()
     
 

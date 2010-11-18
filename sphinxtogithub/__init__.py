@@ -24,7 +24,6 @@ from sphinxtogithub import (
     DirHelper,
     FileSystemHelper,
     OperationsFactory,
-    HandlerFactory,
-    NoDirectoriesError,
+    HandlerFactory
 )
 
