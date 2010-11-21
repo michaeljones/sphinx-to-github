@@ -1,6 +1,20 @@
 Sphinx to GitHub
 ================
 
+.. attention::
+
+   This project is designed to help you get around the github-pages Jekyll
+   behaviour of ignoring top level directories starting with an underscore.
+   
+   This is solved in a much neater way by creating a ``.nojekyll`` in the root
+   of you github-pages which will disable Jekyll as described `here
+   <https://github.com/blog/572-bypassing-jekyll-on-github-pages>`__ and `here
+   <http://pages.github.com/>`__.
+
+   This makes this project largely useless!
+
+   Thank you to `acdha <https://github.com/acdha>`__ for making me aware of this.
+
 A Python script for preparing the html output of the Sphinx documentation
 system for github pages.
 
@@ -85,6 +99,8 @@ Thank you to:
 * `winhamwr <http://github.com/winhamwr>`_
 * `johnpaulett <http://github.com/johnpaulett>`_
 * `boothead <http://github.com/boothead>`_
+* `kennethreitz <https://github.com/kennethreitz>`_
+* `acdha <https://github.com/acdha>`__
 
 For their contributions, which are beginning to outweigh mine, to Georg Brandl
 for `Sphinx <http://sphinx.pocoo.org/>`_ and the github crew for the pages
