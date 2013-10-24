@@ -1,9 +1,11 @@
 #! /usr/bin/env python
  
 from optparse import OptionParser
+
 import os
 import sys
 import shutil
+import codecs
 
 
 class DirHelper(object):
@@ -47,7 +49,7 @@ class FileHandler(object):
 
     def process(self):
 
-        text = self.opener(self.name).read()
+        text = self.opener(self.name, "r").read()
 
         for replacer in self.replacers:
             text = replacer.process( text )
@@ -105,7 +107,7 @@ class DirectoryHandler(object):
         self.renamer = renamer
 
     def path(self):
-        
+
         return os.path.join(self.root, self.name)
 
     def relative_path(self, directory, filename):
@@ -290,12 +292,12 @@ def sphinx_extension(app, exception):
             )
 
     file_helper = FileSystemHelper(
-            open,
+            lambda f, mode: codecs.open(f, mode, app.config.sphinx_to_github_encoding),
             os.path.join,
             shutil.move,
             os.path.exists
             )
-    
+
     operations_factory = OperationsFactory()
     handler_factory = HandlerFactory()
 
@@ -318,6 +320,7 @@ def setup(app):
 
     app.add_config_value("sphinx_to_github", True, '')
     app.add_config_value("sphinx_to_github_verbose", True, '')
+    app.add_config_value("sphinx_to_github_encoding", 'utf-8', '')
 
     app.connect("build-finished", sphinx_extension)
 
@@ -328,6 +331,8 @@ def main(args):
     parser = OptionParser(usage=usage)
     parser.add_option("-v","--verbose", action="store_true",
             dest="verbose", default=False, help="Provides verbose output")
+    parser.add_option("-e","--encoding", action="store",
+            dest="encoding", default="utf-8", help="Encoding for reading and writing files")
     opts, args = parser.parse_args(args)
 
     try:
@@ -347,7 +352,7 @@ def main(args):
             )
 
     file_helper = FileSystemHelper(
-            open,
+            lambda f, mode: codecs.open(f, mode, opts.encoding),
             os.path.join,
             shutil.move,
             os.path.exists
