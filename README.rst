@@ -46,12 +46,14 @@ extensions list in the ``conf.py`` file in your Sphinx project::
 
     extensions = [ "sphinxtogithub" ]
 
-Additionally there are two config variables you can use to control the
-extension. The first enables/disables the extension and the second enables
-verbose output. They are ``True`` by default::
+Additionally there are three config variables you can use to control the
+extension. The first enables/disables the extension, the second enables verbose
+output and the third determines the encoding which is used to read & write
+files. The first two are ``True`` by default and the third is set to ``utf-8``::
 
     sphinx_to_github = True
     sphinx_to_github_verbose = True
+    sphinx_to_github_encoding = "utf-8"
 
 Command Line
 ~~~~~~~~~~~~
@@ -103,7 +105,8 @@ Thank you to:
 * `johnpaulett <http://github.com/johnpaulett>`_
 * `boothead <http://github.com/boothead>`_
 * `kennethreitz <https://github.com/kennethreitz>`_
-* `acdha <https://github.com/acdha>`__
+* `acdha <https://github.com/acdha>`_
+* `garbados <http://github.com/garbados>`_
 
 For their contributions, which are beginning to outweigh mine, to Georg Brandl
 for `Sphinx <http://sphinx.pocoo.org/>`_ and the github crew for the pages
