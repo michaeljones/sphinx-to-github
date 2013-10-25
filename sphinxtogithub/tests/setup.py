@@ -32,7 +32,8 @@ class TestSetup(unittest.TestCase):
 
         self.assertEqual(app.config_values["sphinx_to_github"],(True, ''))
         self.assertEqual(app.config_values["sphinx_to_github_verbose"],(True, ''))
-        self.assertEqual(len(app.config_values),2)
+        self.assertEqual(app.config_values["sphinx_to_github_encoding"],('utf-8', ''))
+        self.assertEqual(len(app.config_values),3)
 
 
 def testSuite():
