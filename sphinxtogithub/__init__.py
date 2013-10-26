@@ -1,7 +1,7 @@
 """Script for preparing the html output of the Sphinx documentation system for
 github pages. """
 
-VERSION = (1, 0, 0, 'dev')
+VERSION = (1, 1, 0, 'dev')
 
 __version__ = ".".join(map(str, VERSION[:-1]))
 __release__ = ".".join(map(str, VERSION))
